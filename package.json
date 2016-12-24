@@ -1,16 +1,23 @@
 {
-  "name": "shop-crawler",
-  "version": "0.0.1",
-  "description": "Test task for backend software engineer",
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/odesskij/ShopCrawler.git"
-  },
-  "author": "Vladimir Odesskij <odesskij1992@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/odesskij/ShopCrawler/issues"
-  },
-  "homepage": "https://github.com/odesskij/ShopCrawler"
+    "name": "shop-crawler",
+    "version": "0.0.1",
+    "description": "Test task for backend software engineer",
+    "scripts": {
+        "lint": "tslint -c ./tslint.json \"./src/**/*.ts\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/odesskij/ShopCrawler.git"
+    },
+    "author": "Vladimir Odesskij <odesskij1992@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/odesskij/ShopCrawler/issues"
+    },
+    "homepage": "https://github.com/odesskij/ShopCrawler",
+    "devDependencies": {
+        "awesome-typescript-loader": "^3.0.0-beta.17",
+        "tslint": "^4.2.0",
+        "typescript": "^2.1.4"
+    }
 }
