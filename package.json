@@ -1,0 +1,16 @@
+{
+  "name": "shop-crawler",
+  "version": "0.0.1",
+  "description": "Test task for backend software engineer",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/odesskij/ShopCrawler.git"
+  },
+  "author": "Vladimir Odesskij <odesskij1992@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/odesskij/ShopCrawler/issues"
+  },
+  "homepage": "https://github.com/odesskij/ShopCrawler"
+}
