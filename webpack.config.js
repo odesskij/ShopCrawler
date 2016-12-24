@@ -1,12 +1,21 @@
 'use strict';
 
+const nodeExternals = require("webpack-node-externals");
+
 module.exports = {
-    entry:  {},
-    output: {
+    entry:     {
+        crawler: "./src/crawler.ts"
+    },
+    target:    "node",
+    externals: [nodeExternals()],
+    output:    {
         filename: "[name].js",
         path:     __dirname + "/dist"
     },
-    module: {
+    resolve:   {
+        extensions: ["", ".ts", ".js"]
+    },
+    module:    {
         loaders: [
             { test: /\.ts$/, loader: "awesome-typescript-loader" }
         ]
