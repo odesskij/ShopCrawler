@@ -1,15 +1,18 @@
 "use strict";
 
 import _ = require("lodash");
-import jsdom = require("jsdom");
 import Category from "./crawler/model/category";
 import Product from "./crawler/model/product";
+import {default as CategoryModel, ICategory} from  "./model/category";
+import {default as ProductModel, IProduct} from  "./model/product";
 
 import Fetcher from "./crawler/fetcher";
 
 const SHOP_HOST = "https://murzik.in.ua";
 
 const fetcher = new Fetcher();
+
+type CategoryOrProduct = Category | Product;
 
 function crawl(url: string): Promise<Category> {
     return fetcher
@@ -39,10 +42,36 @@ function crawl(url: string): Promise<Category> {
         });
 }
 
+function save(model: CategoryOrProduct, parent: ICategory | null): Promise<ICategory | IProduct> {
+
+    if (model instanceof Product) {
+        const product = new ProductModel({
+            category: parent,
+            description: model.description,
+            price: model.price,
+            title: model.title,
+        });
+        return product
+            .save();
+    }
+
+    const category = new CategoryModel({title: model.title, parent});
+    return category
+        .save()
+        .then((c) =>
+            Promise.all(
+                _.map<CategoryOrProduct, Promise<ICategory | IProduct>>(model.children,
+                    (child) => save(child, c))).then(() => c));
+}
+
 fetcher
     .fetch(SHOP_HOST)
     .then(($) =>
-        _.map<HTMLElement, string>($("div.categ-blk.blk > ul > li > a").toArray(),
-            (node) => $(node).attr("href")))
+        _.map<HTMLElement, string>($("div.categ-blk.blk > ul > li > a").toArray(), (node) => $(node).attr("href")))
     .then((urls) =>
-        Promise.all(_.map(urls, (url) => crawl(url))));
+        Promise.all(
+            _.map<string, Promise<CategoryOrProduct>>(urls, (url) => crawl(url))))
+    .then((categories) =>
+        Promise.all(
+            _.map<CategoryOrProduct, Promise<ICategory | IProduct>>((categories), (c) => save(c, null))))
+    .then(() => process.exit(0));
