@@ -4,4 +4,5 @@ import Application from "../app";
 import config from "../config";
 
 const app = new Application(config);
-app.start();
+app.initialize()
+    .HTTPListen();

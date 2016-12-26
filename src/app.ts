@@ -9,6 +9,7 @@ import * as logger from "morgan";
 import indexRoute from "./api/index";
 
 interface Config {
+    env: "prod" | "test" | "dev";
     database: {
         host: string,
         name: string,
@@ -21,22 +22,35 @@ export default class Application {
     public app: express.Application;
     protected log: (msg: string) => void;
 
+    protected config: Config;
     protected HTTP_PORT: number;
 
     constructor(config: Config) {
         /* Only a void function can be called with the 'new' keyword.*/
         /* 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type. */
         this.app = new (<any> express)();
-
+        this.config = config;
         this.HTTP_PORT = config.port;
-
         /* tslint:disable no-console */
         this.log = (msg: string) => console.log(msg);
     }
 
-    public start(): this {
+    public initialize(): this {
+        this.middleware();
+        this.routes();
+        return this;
+    };
+
+    public HTTPListen(): this {
+        this.createHTTPServer();
+        return this;
+    }
+
+    protected middleware() {
         // use logger middleware
-        this.app.use(logger("dev"));
+        if (this.config.env === "dev") {
+            this.app.use(logger("dev"));
+        }
 
         // use json form parser middleware
         this.app.use(bodyParser.json());
@@ -45,9 +59,6 @@ export default class Application {
         this.app.use(bodyParser.urlencoded({
             extended: true,
         }));
-
-        this.routes();
-        this.createHTTPServer();
 
         return this;
     }
