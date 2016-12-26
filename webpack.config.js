@@ -4,7 +4,7 @@ const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
     entry:     {
-        crawler: "./src/crawler.ts",
+        cli: "./src/bin/cli.ts",
         app: "./src/bin/www.ts",
     },
     target:    "node",

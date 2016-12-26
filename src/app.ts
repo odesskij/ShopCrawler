@@ -7,25 +7,22 @@ import * as _ from "lodash";
 import * as logger from "morgan";
 
 import indexRoute from "./api/index";
+import productRoute from "./api/product";
+import {IApplication, IConfig} from "./core/app";
 
-interface Config {
-    env: "prod" | "test" | "dev";
-    database: {
-        host: string,
-        name: string,
-        port: string,
-    };
-    port: number;
-}
+import categoryDefine from "./model/category";
+import productDefine from "./model/product";
+import mongooseDefine from "./mongoose";
 
-export default class Application {
+export default class Application implements IApplication {
     public app: express.Application;
     protected log: (msg: string) => void;
 
-    protected config: Config;
+    protected config: IConfig;
     protected HTTP_PORT: number;
+    private services: any;
 
-    constructor(config: Config) {
+    constructor(config: IConfig) {
         /* Only a void function can be called with the 'new' keyword.*/
         /* 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type. */
         this.app = new (<any> express)();
@@ -36,13 +33,33 @@ export default class Application {
     }
 
     public initialize(): this {
+        this.initializeServices();
         this.middleware();
         this.routes();
+
         return this;
-    };
+    }
+
+    public get(service: string): any {
+        if (!this.services[service]) {
+            throw new Error("Wrong service name");
+        }
+        return this.services[service];
+    }
 
     public HTTPListen(): this {
         this.createHTTPServer();
+        return this;
+    }
+
+    protected initializeServices(): this {
+
+        const mongoose = mongooseDefine(this.config);
+        this.services = {
+            ["mongoose"]: mongoose,
+            ["@model/product"]: productDefine(mongoose),
+            ["@model/category"]: categoryDefine(mongoose),
+        };
         return this;
     }
 
@@ -65,11 +82,12 @@ export default class Application {
 
     protected routes(): this {
 
-        _.each<(r: express.Router) => express.Router>(
+        _.each<(r: express.Router, app: IApplication) => any>(
             [
                 indexRoute,
+                productRoute,
             ], (define) =>
-                this.app.use(define(express.Router())));
+                this.app.use(define(express.Router(), this)));
 
         return this;
 

@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "tslint -c ./tslint.json \"./src/**/*.ts\"",
     "watch": "webpack --watch --color --progress",
+    "build": "webpack",
     "test": "mocha --compilers ts:ts-node/register src/test/**/*.test.ts"
   },
   "repository": {
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/odesskij/ShopCrawler",
   "devDependencies": {
+    "@types/argv": "0.0.4",
     "@types/body-parser": "0.0.33",
     "@types/chai": "^3.4.34",
     "@types/chai-http": "0.0.29",
@@ -36,6 +38,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
+    "argv": "0.0.2",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "generic-pool": "^3.1.5",

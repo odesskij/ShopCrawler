@@ -1,10 +1,11 @@
 "use strict";
 
-import mongoose from "../mongoose";
-
-import {IProduct} from "./product";
+import * as mongoose from "mongoose";
+import {MongooseThenable} from "mongoose";
+import {Model} from "mongoose";
 
 export interface ICategory extends mongoose.Document {
+    _id: string;
     title: string;
     parent?: ICategory;
 }
@@ -13,5 +14,7 @@ export const CategorySchema = new mongoose.Schema({
     title: mongoose.Schema.Types.String,
 });
 
-const Category = mongoose.model<ICategory>("Category", CategorySchema);
-export default Category;
+export type CategoryModel = Model<ICategory>;
+
+export default (mongoose: MongooseThenable): CategoryModel =>
+    mongoose.model<ICategory>("Category", CategorySchema);
