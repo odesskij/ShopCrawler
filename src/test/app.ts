@@ -1,13 +1,12 @@
 "use strict";
 
-import * as Express from "express";
 import * as _ from "lodash";
-import Application from "../app";
 import config from "../config";
-import {IApplication} from "../core/app";
+import Application from "../core/app/http";
+import Kernel from "../core/app/kernel";
 
-const app: IApplication = new Application(_.defaults(_.clone(config), {env: "test"}))
-    .initialize();
+const kernel = new Kernel(_.defaults(_.clone(config), {env: "test"}));
+const app = new Application(kernel);
+app.initialize();
 
 export default app;
-export const express: Express.Application = app.app;

@@ -2,7 +2,6 @@
 
 import _ = require("lodash");
 import {IApplication} from "./core/app";
-import {ICommand} from "./core/cli";
 import Fetcher from "./crawler/fetcher";
 import Category from "./crawler/model/category";
 import Product from "./crawler/model/product";
@@ -13,10 +12,10 @@ const SHOP_HOST = "https://murzik.in.ua";
 
 type CategoryOrProduct = Category | Product;
 
-export default (app: IApplication): ICommand => {
+export default (app: IApplication) => {
 
-    const ProductModel = app.get("@model/product");
-    const CategoryModel = app.get("@model/category");
+    const ProductModel = app.getContainer().get("@model/product");
+    const CategoryModel = app.getContainer().get("@model/category");
 
     const fetcher = new Fetcher();
 
@@ -70,8 +69,8 @@ export default (app: IApplication): ICommand => {
                         (child) => save(child, c))).then(() => c));
     }
 
-    return () => {
-        return fetcher
+    return () =>
+        fetcher
             .fetch(SHOP_HOST)
             .then(($) =>
                 _.map<HTMLElement, string>($("div.categ-blk.blk > ul > li > a").toArray(),
@@ -82,5 +81,4 @@ export default (app: IApplication): ICommand => {
             .then((categories) =>
                 Promise.all(_.map<CategoryOrProduct, Promise<ICategory | IProduct>>((categories),
                     (c) => save(c, null))));
-    };
 };

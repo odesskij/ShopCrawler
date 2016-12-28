@@ -4,14 +4,14 @@ import chaiHttp = require("chai-http");
 import * as chai from "chai";
 import {ICategory} from "../model/category";
 import {IProduct} from "../model/product";
-import {default as app, express} from "./app";
+import app from "./app";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
 
 describe("Product", () => {
-    const Product = app.get("@model/product");
-    const Category = app.get("@model/category");
+    const Product = app.getContainer().get("@model/product");
+    const Category = app.getContainer().get("@model/category");
 
     let product: IProduct;
     let category: ICategory;
@@ -31,7 +31,7 @@ describe("Product", () => {
     });
 
     it("/api/products/:id", () =>
-        chai.request(express)
+        chai.request(app.getExpress())
             .get(`/api/products/${product._id}`)
             .then((res) => {
 

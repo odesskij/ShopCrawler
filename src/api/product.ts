@@ -1,11 +1,11 @@
 "use strict";
 
 import * as express from "express";
-import {IApplication} from "../core/app";
+import IApplication from "../core/app";
 
 export default function (router: express.Router, app: IApplication): express.Router {
 
-    const Product = app.get("@model/product");
+    const Product = app.getContainer().get("@model/product");
 
     router.get("/api/products/:id", (req: express.Request, res: express.Response) =>
         Product

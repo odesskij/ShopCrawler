@@ -1,8 +1,9 @@
 "use strict";
 
-import Application from "../app";
 import config from "../config";
+import Application from "../core/app/http";
+import Kernel from "../core/app/kernel";
 
-const app = new Application(config);
-app.initialize()
-    .HTTPListen();
+const kernel = new Kernel(config);
+const app = new Application(kernel);
+app.run();

@@ -3,14 +3,14 @@
 import chaiHttp = require("chai-http");
 import * as chai from "chai";
 
-import {express} from "./app";
+import app from "./app";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
 
 describe("Application", () => {
     it("respond", () =>
-        chai.request(express)
+        chai.request(app.getExpress())
             .get("/")
             .then((res) => {
                 expect(res.status).to.eql(200);
