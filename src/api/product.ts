@@ -8,8 +8,9 @@ import {IProduct} from "../model/product";
 export default function (router: express.Router, app: IApplication): express.Router {
 
     const Product = app.getContainer().get("@model/product");
+    const redis = app.getContainer().get("redis");
 
-    router.get("/api/products/:id", (req: express.Request, res: express.Response) =>
+    router.get("/api/products/:id", redis.middleware(5 * 60), (req: express.Request, res: express.Response) =>
         Product
             .findOne({_id: req.params.id})
             .populate("category")

@@ -9,4 +9,9 @@ export default (<IConfig> {
     },
     env: process.env.NODE_ENV || "dev",
     port: process.env.PORT,
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: +process.env.REDIS_PORT,
+        prefix: process.env.REDIS_PORT,
+    },
 });

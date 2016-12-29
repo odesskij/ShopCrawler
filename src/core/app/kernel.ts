@@ -6,6 +6,7 @@ import Container from "../container/container";
 import category from "../../model/category";
 import product from "../../model/product";
 import mongoose from "../../mongoose";
+import redis from "../../redis";
 
 export default class Kernel {
     protected config: IConfig;
@@ -29,6 +30,12 @@ export default class Kernel {
 
         this.container.add("@model/category", category(this.getContainer().get("mongoose")));
         this.container.add("@model/product", product(this.getContainer().get("mongoose")));
+
+        this.container.add("redis", redis(
+            this.getConfig().redis.host,
+            this.getConfig().redis.port,
+            this.getConfig().redis.prefix,
+        ));
 
         return this;
     }

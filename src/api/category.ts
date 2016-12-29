@@ -8,6 +8,7 @@ import {ICategory} from "../model/category";
 export default function (router: express.Router, app: IApplication): express.Router {
 
     const Category = app.getContainer().get("@model/category");
+    const redis = app.getContainer().get("redis");
 
     function getCategoryTree(parent: ICategory): Promise<ICategory> {
         return Category
@@ -16,7 +17,7 @@ export default function (router: express.Router, app: IApplication): express.Rou
             .then((r) => _.extend(parent.toJSON(), {children: r}));
     }
 
-    router.get("/api/categories/:id", (req: express.Request, res: express.Response) =>
+    router.get("/api/categories/:id", redis.middleware(5 * 60), (req: express.Request, res: express.Response) =>
         Category
             .findOne({_id: req.params.id})
             .then((parent) => getCategoryTree(parent))
