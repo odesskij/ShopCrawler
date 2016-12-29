@@ -9,6 +9,7 @@ import IApplication from "../app";
 import IContainer from "../container";
 import Kernel from "./kernel";
 
+import categoryRoute from "../../api/category";
 import indexRoute from "../../api/index";
 import productRoute from "../../api/product";
 
@@ -52,6 +53,7 @@ class HTTPApplication implements IApplication {
         _.each<(r: express.Router, app: IApplication) => any>([
             indexRoute,
             productRoute,
+            categoryRoute,
         ], (define) =>
             this.getExpress().use(define(express.Router(), this)));
 

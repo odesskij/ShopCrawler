@@ -25,8 +25,14 @@ export default function (router: express.Router, app: IApplication): express.Rou
         const limit = (+req.query.perPage) || 10;
         const offset = (req.query.page ? +req.query.page - 1 : 0) * limit;
 
+        // TODO: fix it
+        const query = _.extend(
+            {},
+            req.query.category ? {parent: req.query.category} : {},
+        );
+
         Product
-            .paginate({}, {
+            .paginate(query, {
                 offset,
                 limit,
                 populate: "category",
@@ -42,5 +48,6 @@ export default function (router: express.Router, app: IApplication): express.Rou
                     .status(500)
                     .send());
     });
+
     return router;
 }
