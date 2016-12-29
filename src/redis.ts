@@ -16,7 +16,7 @@ export default function (host: string, port: number, prefix: string) {
         res.end = (content: Buffer, encoding: any) => {
             if (content) {
                 client.set(key, JSON.stringify({body: JSON.parse(content.toString())}));
-                client.expire(ttl);
+                client.expire(key, ttl);
             }
             return res._end(content, encoding);
         };
